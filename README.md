@@ -1,1 +1,1 @@
-link : https://peaceful-souffle-7139bf.netlify.app/index.html
+link : https://symphonious-gumdrop-f6a39a.netlify.app/index.html
