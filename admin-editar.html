@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Usuário — Admin</title>
+  <meta name="description" content="Editar ou criar usuário pelo administrador.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+
+<div id="toast-container"></div>
+<div id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-box__icon">⚠️</div>
+    <h3>Confirmar ação</h3>
+    <p id="modal-message"></p>
+    <div class="modal-box__actions">
+      <button class="btn btn--secondary" id="modal-cancel">Cancelar</button>
+      <button class="btn btn--danger" id="modal-confirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+<div id="loading-overlay">
+  <div class="loading__spinner"></div>
+  <p class="loading__text">Carregando...</p>
+</div>
+
+<div class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__brand">
+      <div style="font-size:1.4rem; margin-bottom:0.25rem;">🧪</div>
+      <div class="sidebar__brand-name">SistemaTest</div>
+      <div class="sidebar__brand-role">Painel Administrador</div>
+    </div>
+    <nav class="sidebar__nav">
+      <div class="sidebar__nav-section">Principal</div>
+      <a href="admin.html" class="sidebar__nav-link">
+        <span class="sidebar__nav-icon">👥</span> Usuários
+      </a>
+      <div class="sidebar__nav-section">Documentação</div>
+      <a href="plano-testes.html" class="sidebar__nav-link">
+        <span class="sidebar__nav-icon">📋</span> Plano de Testes
+      </a>
+
+    </nav>
+    <div class="sidebar__footer">
+      <button class="btn btn--secondary btn--full btn--sm" id="btn-logout">🚪 Sair</button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-header">
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+        <span class="admin-header__title" id="page-title">Editar Usuário</span>
+      </div>
+      <div class="admin-header__user">
+        <div class="admin-header__avatar" id="admin-avatar">A</div>
+        <span id="admin-name">Admin</span>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title" id="form-title">Editar Usuário</h1>
+          <p class="page-header__subtitle" id="form-subtitle">Carregando...</p>
+        </div>
+        <a href="admin.html" class="btn btn--secondary btn--sm">← Voltar</a>
+      </div>
+
+      <div id="user-not-found" class="hidden">
+        <div class="info-box info-box--danger">
+          <span>✖</span>
+          <div>
+            <strong>Usuário não encontrado.</strong>
+            <a href="admin.html" style="display:block; margin-top:4px;">← Voltar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="edit-card">
+        <div class="card__body">
+          <form id="edit-form" novalidate>
+
+            <!-- ── Dados Pessoais ── -->
+            <div class="form-section">
+              <p class="form-section-title">👤 Dados Pessoais</p>
+              <div class="form-grid form-grid--2">
+                <div class="form-group form-grid--col-span-2">
+                  <label class="form-label" for="field-name">Nome completo <span class="required">*</span></label>
+                  <input class="form-control" type="text" id="field-name">
+                  <span class="field-error" id="error-name"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-username">Nome de usuário <span class="required">*</span></label>
+                  <input class="form-control" type="text" id="field-username" spellcheck="false">
+                  <span class="field-error" id="error-username"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-cpf">CPF <span class="optional">(opcional — F01)</span></label>
+                  <input class="form-control" type="text" id="field-cpf" maxlength="14">
+                  <span class="field-error" id="error-cpf"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-phone">Telefone</label>
+                  <input class="form-control" type="tel" id="field-phone" maxlength="15">
+                  <span class="field-error" id="error-phone"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-email">E-mail <span class="required">*</span></label>
+                  <input class="form-control" type="email" id="field-email">
+                  <span class="field-error" id="error-email"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-gender">Sexo <span class="required">*</span></label>
+                  <select class="form-control" id="field-gender">
+                    <option value="">Selecione...</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Feminino</option>
+                    <option value="O">Outro</option>
+                    <option value="N">Prefiro não informar</option>
+                  </select>
+                  <span class="field-error" id="error-gender"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-social_name">Nome social <span class="optional">(opcional — F02)</span></label>
+                  <input class="form-control" type="text" id="field-social_name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-birth_date">Data de nascimento</label>
+                  <input class="form-control" type="date" id="field-birth_date">
+                  <span class="field-error" id="error-birth_date"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-status">Status</label>
+                  <select class="form-control" id="field-status">
+                    <option value="active">Ativo</option>
+                    <option value="inactive">Inativo</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-role">Perfil</label>
+                  <select class="form-control" id="field-role">
+                    <option value="USER">Usuário</option>
+                    <option value="ADMIN">Administrador</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── Endereço ── -->
+            <div class="form-section">
+              <p class="form-section-title">📍 Endereço</p>
+              <div class="form-grid form-grid--3">
+                <div class="form-group form-grid--col-span-2">
+                  <label class="form-label" for="field-address">Logradouro <span class="required">*</span></label>
+                  <input class="form-control" type="text" id="field-address">
+                  <span class="field-error" id="error-address"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-number">Número <span class="required">*</span></label>
+                  <input class="form-control" type="text" id="field-number">
+                  <span class="field-error" id="error-number"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-complement">Complemento <span class="optional">(F03)</span></label>
+                  <input class="form-control" type="text" id="field-complement">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-neighborhood">Bairro <span class="optional">(F03)</span></label>
+                  <input class="form-control" type="text" id="field-neighborhood">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-zip_code">CEP</label>
+                  <input class="form-control" type="text" id="field-zip_code" maxlength="9">
+                  <span class="field-error" id="error-zip_code"></span>
+                </div>
+                <div class="form-group form-grid--col-span-2">
+                  <label class="form-label" for="field-city">Cidade <span class="required">*</span></label>
+                  <input class="form-control" type="text" id="field-city">
+                  <span class="field-error" id="error-city"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-state">Estado <span class="required">*</span></label>
+                  <select class="form-control" id="field-state">
+                    <option value="">UF...</option>
+                    <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+                    <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+                    <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+                    <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+                    <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+                    <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+                    <option>SP</option><option>SE</option><option>TO</option>
+                  </select>
+                  <span class="field-error" id="error-state"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── Senha ── -->
+            <div class="form-section">
+              <p class="form-section-title">🔒 Senha</p>
+              <div class="info-box info-box--info" style="margin-bottom:1rem; font-size:0.78rem;">
+                <span>ℹ</span>
+                <span>Deixe em branco para manter a senha atual. Preencha apenas para alterar.</span>
+              </div>
+              <div class="form-grid form-grid--2">
+                <div class="form-group">
+                  <label class="form-label" for="field-password">Nova senha</label>
+                  <input class="form-control" type="password" id="field-password" autocomplete="new-password" placeholder="Mínimo 6 caracteres">
+                  <span class="field-error" id="error-password"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="field-confirmPassword">Confirmar nova senha</label>
+                  <input class="form-control" type="password" id="field-confirmPassword" autocomplete="new-password">
+                  <span class="field-error" id="error-confirmPassword"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ações -->
+            <div style="display:flex; gap:0.75rem; justify-content:flex-end; flex-wrap:wrap;">
+              <a href="admin.html" class="btn btn--secondary">← Cancelar</a>
+              <button type="submit" class="btn btn--primary" id="btn-save">💾 Salvar</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/validations.js"></script>
+<script src="js/users.js"></script>
+<script src="js/seed.js"></script>
+<script>
+
+  runSeed();
+  if (!requireAdmin()) { /* handled */ }
+
+  const session = getSession();
+  document.getElementById('admin-name').textContent = session.name.split(' ')[0];
+  document.getElementById('admin-avatar').textContent = session.name[0].toUpperCase();
+  document.getElementById('sidebar-toggle').addEventListener('click', () =>
+    document.getElementById('sidebar').classList.toggle('sidebar--open'));
+  document.getElementById('btn-logout').addEventListener('click', () => {
+    showConfirmModal('Tem certeza que deseja sair?', () => { endSession(); window.location.href = 'index.html'; });
+  });
+
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get('id');
+  const isNew = params.get('new') === '1';
+
+  let currentUser = null;
+
+  // ── Máscara CPF
+  document.getElementById('field-cpf').addEventListener('input', function () {
+    let v = this.value.replace(/\D/g, '').slice(0,11);
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    this.value = v;
+  });
+
+  if (isNew) {
+    document.getElementById('page-title').textContent = 'Novo Usuário';
+    document.getElementById('form-title').textContent = 'Cadastrar Novo Usuário';
+    document.getElementById('form-subtitle').textContent = 'Preencha os dados do novo usuário.';
+    // Campo senha obrigatório para novo
+    document.querySelector('label[for="field-password"]').innerHTML =
+      'Senha <span class="required">*</span>';
+  } else {
+    // Editar existente
+    if (!userId) {
+      document.getElementById('edit-card').classList.add('hidden');
+      document.getElementById('user-not-found').classList.remove('hidden');
+    } else {
+      currentUser = getUserById(userId);
+      if (!currentUser) {
+        document.getElementById('edit-card').classList.add('hidden');
+        document.getElementById('user-not-found').classList.remove('hidden');
+      } else {
+        document.getElementById('form-subtitle').textContent = `Editando: @${currentUser.username}`;
+
+        // Preenche formulário
+        document.getElementById('field-name').value = currentUser.name || '';
+        document.getElementById('field-username').value = currentUser.username || '';
+        document.getElementById('field-cpf').value = currentUser.cpf || '';
+        document.getElementById('field-phone').value = currentUser.phone ? formatPhone(currentUser.phone) : '';
+        document.getElementById('field-email').value = currentUser.email || '';
+        document.getElementById('field-gender').value = currentUser.gender || '';
+        document.getElementById('field-social_name').value = currentUser.social_name || '';
+        document.getElementById('field-birth_date').value = currentUser.birth_date || '';
+        document.getElementById('field-status').value = currentUser.status || 'active';
+        document.getElementById('field-role').value = currentUser.role || 'USER';
+        document.getElementById('field-address').value = currentUser.address || '';
+        document.getElementById('field-number').value = currentUser.number || '';
+        document.getElementById('field-complement').value = currentUser.complement || '';
+        document.getElementById('field-neighborhood').value = currentUser.neighborhood || '';
+        document.getElementById('field-city').value = currentUser.city || '';
+        document.getElementById('field-state').value = currentUser.state || '';
+        document.getElementById('field-zip_code').value = currentUser.zip_code || '';
+      }
+    }
+  }
+
+  // ── Submit
+  document.getElementById('edit-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearFormErrors();
+
+    const formData = {
+      name: document.getElementById('field-name').value,
+      username: document.getElementById('field-username').value,
+      cpf: document.getElementById('field-cpf').value,
+      phone: document.getElementById('field-phone').value,
+      email: document.getElementById('field-email').value,
+      gender: document.getElementById('field-gender').value,
+      social_name: document.getElementById('field-social_name').value,
+      birth_date: document.getElementById('field-birth_date').value,
+      status: document.getElementById('field-status').value,
+      role: document.getElementById('field-role').value,
+      address: document.getElementById('field-address').value,
+      number: document.getElementById('field-number').value,
+      complement: document.getElementById('field-complement').value,
+      neighborhood: document.getElementById('field-neighborhood').value,
+      city: document.getElementById('field-city').value,
+      state: document.getElementById('field-state').value,
+      zip_code: document.getElementById('field-zip_code').value,
+      password: document.getElementById('field-password').value,
+      confirmPassword: document.getElementById('field-confirmPassword').value,
+    };
+
+    let result;
+
+    if (isNew) {
+      result = createUser(formData);
+    } else {
+      // Senha opcional na edição — se vazia, usa a senha atual do usuário
+      if (!formData.password || formData.password.trim() === '') {
+        // Recupera hash atual e injeta a senha decoded para passar na validação
+        const existingRaw = dbFindById(userId);
+        // Não temos acesso ao texto puro — ignora validação de senha no update
+        formData._skipPasswordValidation = true;
+        formData.password = '__KEEP_CURRENT__';
+        formData.confirmPassword = '__KEEP_CURRENT__';
+      }
+      result = updateUser(userId, formData);
+    }
+
+    if (!result.success) {
+      displayFormErrors(result.errors);
+      showToast('Corrija os erros.', 'error');
+      return;
+    }
+
+    showToast(isNew ? 'Usuário criado com sucesso!' : 'Usuário atualizado com sucesso!', 'success');
+    log(`[ADMIN] ${isNew ? 'Criado' : 'Atualizado'}: ${result.user.username}`, 'info');
+    setTimeout(() => window.location.href = `admin-detalhes.html?id=${result.user.id}`, 900);
+  });
+</script>
+</body>
+</html>

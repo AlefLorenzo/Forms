@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualizar Usuário — Admin</title>
+  <meta name="description" content="Visualização completa dos dados de um usuário pelo administrador.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+
+<div id="toast-container"></div>
+<div id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-box__icon">🗑️</div>
+    <h3>Confirmar exclusão</h3>
+    <p id="modal-message"></p>
+    <div class="modal-box__actions">
+      <button class="btn btn--secondary" id="modal-cancel">Cancelar</button>
+      <button class="btn btn--danger" id="modal-confirm">Excluir</button>
+    </div>
+  </div>
+</div>
+<div id="loading-overlay">
+  <div class="loading__spinner"></div>
+  <p class="loading__text">Carregando informações...</p>
+</div>
+
+<div class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__brand">
+      <div style="font-size:1.4rem; margin-bottom:0.25rem;">🧪</div>
+      <div class="sidebar__brand-name">SistemaTest</div>
+      <div class="sidebar__brand-role">Painel Administrador</div>
+    </div>
+    <nav class="sidebar__nav">
+      <div class="sidebar__nav-section">Principal</div>
+      <a href="admin.html" class="sidebar__nav-link">
+        <span class="sidebar__nav-icon">👥</span> Usuários
+      </a>
+      <div class="sidebar__nav-section">Documentação</div>
+      <a href="plano-testes.html" class="sidebar__nav-link">
+        <span class="sidebar__nav-icon">📋</span> Plano de Testes
+      </a>
+
+    </nav>
+    <div class="sidebar__footer">
+      <button class="btn btn--secondary btn--full btn--sm" id="btn-logout">🚪 Sair</button>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-header">
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+        <span class="admin-header__title">Visualizar Usuário</span>
+      </div>
+      <div class="admin-header__user">
+        <div class="admin-header__avatar" id="admin-avatar">A</div>
+        <span id="admin-name">Admin</span>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Detalhes do Usuário</h1>
+          <p class="page-header__subtitle" id="user-subtitle">Carregando...</p>
+        </div>
+        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+          <a href="admin.html" class="btn btn--secondary btn--sm">← Voltar</a>
+          <a href="#" class="btn btn--secondary btn--sm" id="btn-edit">✏️ Editar</a>
+          <button class="btn btn--danger btn--sm" id="btn-delete">🗑️ Excluir</button>
+        </div>
+      </div>
+
+      <div id="user-not-found" class="hidden">
+        <div class="info-box info-box--danger">
+          <span>✖</span>
+          <div>
+            <strong>Usuário não encontrado.</strong><br>
+            O ID informado não corresponde a nenhum usuário cadastrado.<br>
+            <a href="admin.html">← Voltar à lista</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="user-details">
+
+        <!-- Card: Dados pessoais -->
+        <div class="card mb-6">
+          <div class="card__header">
+            <h2 class="card__title">👤 Dados Pessoais</h2>
+            <div id="user-badges" style="display:flex; gap:0.5rem;"></div>
+          </div>
+          <div class="card__body">
+            <div class="detail-grid" id="personal-data"></div>
+          </div>
+        </div>
+
+        <!-- Card: Endereço -->
+        <div class="card mb-6">
+          <div class="card__header">
+            <h2 class="card__title">📍 Endereço</h2>
+          </div>
+          <div class="card__body">
+            <div class="detail-grid" id="address-data"></div>
+          </div>
+        </div>
+
+        <!-- Card: Conta -->
+        <div class="card mb-6">
+          <div class="card__header">
+            <h2 class="card__title">🔑 Conta e Metadados</h2>
+          </div>
+          <div class="card__body">
+            <div class="detail-grid" id="account-data"></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/validations.js"></script>
+<script src="js/users.js"></script>
+<script src="js/seed.js"></script>
+<script>
+
+  runSeed();
+  if (!requireAdmin()) { /* handled */ }
+
+  const session = getSession();
+  document.getElementById('admin-name').textContent = session.name.split(' ')[0];
+  document.getElementById('admin-avatar').textContent = session.name[0].toUpperCase();
+
+  document.getElementById('sidebar-toggle').addEventListener('click', () =>
+    document.getElementById('sidebar').classList.toggle('sidebar--open'));
+
+  document.getElementById('btn-logout').addEventListener('click', () => {
+    showConfirmModal('Tem certeza que deseja sair?', () => {
+      endSession(); window.location.href = 'index.html';
+    });
+  });
+
+  function detailField(label, value, mono = false, isFlag = false) {
+    const empty = !value || value === '';
+    const flagWarning = isFlag && empty ? ' <span class="badge badge--warning" style="font-size:0.65rem;">Vazio (Falha)</span>' : '';
+    return `
+      <div class="detail-field">
+        <span class="detail-field__label">${label}</span>
+        <span class="detail-field__value ${mono ? 'mono' : ''} ${empty ? 'empty' : ''}">
+          ${empty ? 'Não informado' : escapeHtml(String(value))}${flagWarning}
+        </span>
+      </div>
+    `;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get('id');
+
+  async function loadUser() {
+    await applyPerformanceDelay('Carregando detalhes do usuário...');
+
+    // [CAIXA-BRANCA] Testa ID vazio/inválido
+    if (!userId || userId.trim() === '') {
+      document.getElementById('user-details').classList.add('hidden');
+      document.getElementById('user-not-found').classList.remove('hidden');
+      document.getElementById('user-subtitle').textContent = 'ID não informado';
+      log('[DETALHES] ID vazio ou inválido', 'warn');
+      return;
+    }
+
+    const user = getUserById(userId);
+
+    // [CAIXA-BRANCA] Testa usuário não encontrado
+    if (!user) {
+      document.getElementById('user-details').classList.add('hidden');
+      document.getElementById('user-not-found').classList.remove('hidden');
+      document.getElementById('user-subtitle').textContent = `ID: ${userId} — não encontrado`;
+      log(`[DETALHES] Usuário id=${userId} não encontrado`, 'warn');
+      return;
+    }
+
+    document.getElementById('user-subtitle').textContent = `@${user.username} — ID: ${user.id}`;
+    document.getElementById('btn-edit').href = `admin-editar.html?id=${user.id}`;
+
+    const genderMap = { M: 'Masculino', F: 'Feminino', O: 'Outro', N: 'Prefiro não informar' };
+
+    // Badges
+    document.getElementById('user-badges').innerHTML = `
+      <span class="badge badge--${user.status === 'active' ? 'success' : 'error'}">
+        ${user.status === 'active' ? 'Ativo' : 'Inativo'}
+      </span>
+      <span class="badge badge--${user.role === 'ADMIN' ? 'info' : 'warning'}">
+        ${user.role}
+      </span>
+    `;
+
+    document.getElementById('personal-data').innerHTML = [
+      detailField('Nome Completo', user.name),
+      detailField('Nome de Usuário', user.username, true),
+      detailField('CPF', formatCPF(user.cpf), true, true),  // F01
+      detailField('Telefone', formatPhone(user.phone), true),
+      detailField('E-mail', user.email),
+      detailField('Sexo', genderMap[user.gender] || user.gender),
+      detailField('Nome Social', user.social_name, false, true),  // F02
+      detailField('Data de Nascimento', user.birth_date ? formatDate(user.birth_date + 'T00:00:00') : ''),
+    ].join('');
+
+    document.getElementById('address-data').innerHTML = [
+      detailField('Logradouro', user.address),
+      detailField('Número', user.number),
+      detailField('Complemento', user.complement, false, true),  // F03
+      detailField('Bairro', user.neighborhood, false, true),     // F03
+      detailField('Cidade', user.city),
+      detailField('Estado', user.state),
+      detailField('CEP', user.zip_code, true),
+    ].join('');
+
+    document.getElementById('account-data').innerHTML = [
+      detailField('Perfil (Role)', user.role, true),
+      detailField('Status', user.status),
+      detailField('ID', user.id, true),
+      detailField('Cadastrado em', formatDateTime(user.created_at)),
+      detailField('Atualizado em', formatDateTime(user.updated_at)),
+    ].join('');
+
+    // Botão excluir
+    document.getElementById('btn-delete').addEventListener('click', () => {
+      showConfirmModal(
+        `Tem certeza que deseja excluir o usuário "${user.name}"?`,
+        () => {
+          const result = deleteUser(user.id);
+          if (result.success) {
+            showToast('Usuário excluído.', 'success');
+            setTimeout(() => window.location.href = 'admin.html', 900);
+          } else {
+            showToast(result.error, 'error');
+          }
+        }
+      );
+    });
+  }
+
+  loadUser();
+</script>
+</body>
+</html>

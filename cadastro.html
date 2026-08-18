@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro — Sistema de Testes</title>
+  <meta name="description" content="Formulário de cadastro de usuário do Sistema de Testes de Software.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+
+<div id="toast-container"></div>
+<div id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-box__icon">🗑️</div>
+    <h3>Confirmar ação</h3>
+    <p id="modal-message"></p>
+    <div class="modal-box__actions">
+      <button class="btn btn--secondary" id="modal-cancel">Cancelar</button>
+      <button class="btn btn--danger" id="modal-confirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+<div id="loading-overlay">
+  <div class="loading__spinner"></div>
+  <p class="loading__text">Carregando...</p>
+</div>
+
+<main class="auth-page" style="align-items: flex-start; padding: 2rem 1.5rem;">
+  <div class="auth-card auth-card--wide" style="margin: 0 auto;">
+
+    <!-- Header -->
+    <div class="auth-logo">
+      <div class="auth-logo__icon">🧪</div>
+      <h1 class="auth-logo__title">SistemaTest</h1>
+      <p class="auth-logo__subtitle">Cadastro de Usuário</p>
+    </div>
+
+    <!-- Avisos de falhas intencionais -->
+    <div class="info-box info-box--warning" style="margin-bottom:1.5rem; font-size:0.8rem;">
+      <span>⚠</span>
+      <div>
+        <strong>[FALHAS INTENCIONAIS para Testes]</strong> — CPF (F01), Nome Social (F02) e endereço incompleto (F03) podem ser enviados <em>vazios</em> sem erro.
+        Outros campos são obrigatórios e rejeitarão envios inválidos.
+      </div>
+    </div>
+
+    <form id="register-form" novalidate>
+
+      <!-- ── Seção: Dados Pessoais ── -->
+      <div class="form-section">
+        <p class="form-section-title">👤 Dados Pessoais</p>
+        <div class="form-grid form-grid--2">
+
+          <div class="form-group form-grid--col-span-2">
+            <label class="form-label" for="field-name">
+              Nome completo <span class="required">*</span>
+            </label>
+            <input class="form-control" type="text" id="field-name" name="name" placeholder="Ex: João da Silva Santos">
+            <span class="field-error" id="error-name" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field-username">
+              Nome de usuário <span class="required">*</span>
+            </label>
+            <input class="form-control" type="text" id="field-username" name="username" placeholder="Ex: joao123" autocomplete="off" spellcheck="false">
+            <span class="field-error" id="error-username" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field-cpf">
+              CPF
+              <span class="optional">(opcional — F01)</span>
+            </label>
+            <input class="form-control" type="text" id="field-cpf" name="cpf" placeholder="000.000.000-00" maxlength="14">
+            <span class="field-error" id="error-cpf" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field-phone">
+              Telefone
+            </label>
+            <input class="form-control" type="tel" id="field-phone" name="phone" placeholder="(11) 99999-9999" maxlength="15">
+            <span class="field-error" id="error-phone" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field-email">
+              E-mail <span class="required">*</span>
+            </label>
+            <input class="form-control" type="email" id="field-email" name="email" placeholder="email@exemplo.com">
+            <span class="field-error" id="error-email" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field-gender">
+              Sexo <span class="required">*</span>
+            </label>
+            <select class="form-control" id="field-gender" name="gender">
+              <option value="">Selecione...</option>
+              <option value="M">Masculino</option>
+              <option value="F">Feminino</option>
+              <option value="O">Outro</option>
+              <option value="N">Prefiro não informar</option>
+            </select>
+            <span class="field-error" id="error-gender" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field-social_name">
+              Nome social
+              <span class="optional">(opcional — F02)</span>
+            </label>
+            <input class="form-control" type="text" id="field-social_name" name="social_name" placeholder="Nome pelo qual prefere ser chamado(a)">
+            <span class="field-error" id="error-social_name" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field-birth_date">
+              Data de nascimento
+            </label>
+            <input class="form-control" type="date" id="field-birth_date" name="birth_date">
+            <span class="field-error" id="error-birth_date" role="alert"></span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Seção: Endereço ── -->
+      <div class="form-section">
+        <p class="form-section-title">📍 Endereço</p>
+        <div class="form-grid form-grid--3">
+
+          <div class="form-group form-grid--col-span-2">
+            <label class="form-label" for="field-address">
+              Logradouro <span class="required">*</span>
+            </label>
+            <input class="form-control" type="text" id="field-address" name="address" placeholder="Rua, Avenida, Travessa...">
+            <span class="field-error" id="error-address" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field-number">
+              Número <span class="required">*</span>
+            </label>
+            <input class="form-control" type="text" id="field-number" name="number" placeholder="123">
+            <span class="field-error" id="error-number" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field-complement">
+              Complemento
+              <span class="optional">(opcional — F03)</span>
+            </label>
+            <input class="form-control" type="text" id="field-complement" name="complement" placeholder="Apto, Sala, Casa...">
+            <span class="field-error" id="error-complement" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field-neighborhood">
+              Bairro
+              <span class="optional">(opcional — F03)</span>
+            </label>
+            <input class="form-control" type="text" id="field-neighborhood" name="neighborhood" placeholder="Nome do bairro">
+            <span class="field-error" id="error-neighborhood" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field-zip_code">
+              CEP
+            </label>
+            <input class="form-control" type="text" id="field-zip_code" name="zip_code" placeholder="00000-000" maxlength="9">
+            <span class="field-error" id="error-zip_code" role="alert"></span>
+          </div>
+
+          <div class="form-group form-grid--col-span-2">
+            <label class="form-label" for="field-city">
+              Cidade <span class="required">*</span>
+            </label>
+            <input class="form-control" type="text" id="field-city" name="city" placeholder="Nome da cidade">
+            <span class="field-error" id="error-city" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field-state">
+              Estado <span class="required">*</span>
+            </label>
+            <select class="form-control" id="field-state" name="state">
+              <option value="">UF...</option>
+              <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+              <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+              <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+              <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+              <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+              <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+              <option>SP</option><option>SE</option><option>TO</option>
+            </select>
+            <span class="field-error" id="error-state" role="alert"></span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Seção: Senha ── -->
+      <div class="form-section">
+        <p class="form-section-title">🔒 Senha</p>
+        <div class="form-grid form-grid--2">
+
+          <div class="form-group">
+            <label class="form-label" for="field-password">
+              Senha <span class="required">*</span>
+            </label>
+            <div style="position:relative;">
+              <input class="form-control" type="password" id="field-password" name="password"
+                placeholder="Mínimo 6 caracteres" autocomplete="new-password" style="padding-right:44px;">
+              <button type="button" class="toggle-pw" data-target="field-password"
+                style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--color-text-muted);cursor:pointer;">👁</button>
+            </div>
+            <span class="field-error" id="error-password" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="field-confirmPassword">
+              Confirmar senha <span class="required">*</span>
+            </label>
+            <div style="position:relative;">
+              <input class="form-control" type="password" id="field-confirmPassword" name="confirmPassword"
+                placeholder="Repita a senha" autocomplete="new-password" style="padding-right:44px;">
+              <button type="button" class="toggle-pw" data-target="field-confirmPassword"
+                style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--color-text-muted);cursor:pointer;">👁</button>
+            </div>
+            <span class="field-error" id="error-confirmPassword" role="alert"></span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Ações -->
+      <div style="display:flex; gap:0.75rem; justify-content:flex-end; flex-wrap:wrap; margin-top:0.5rem;">
+        <a href="index.html" class="btn btn--secondary">← Voltar ao Login</a>
+        <button type="submit" class="btn btn--primary" id="btn-register">Criar conta</button>
+      </div>
+
+    </form>
+
+    <div class="auth-footer" style="margin-top:1.5rem;">
+      Já possui uma conta? <a href="index.html">Fazer login</a>
+    </div>
+  </div>
+</main>
+
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/validations.js"></script>
+<script src="js/users.js"></script>
+<script src="js/seed.js"></script>
+<script>
+
+  runSeed();
+  redirectIfLoggedIn();
+
+  // Toggle senha
+  document.querySelectorAll('.toggle-pw').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const input = document.getElementById(this.dataset.target);
+      input.type = input.type === 'password' ? 'text' : 'password';
+      this.textContent = input.type === 'password' ? '👁' : '🙈';
+    });
+  });
+
+  // Máscara CPF
+  document.getElementById('field-cpf').addEventListener('input', function () {
+    let v = this.value.replace(/\D/g, '').slice(0, 11);
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    this.value = v;
+  });
+
+  // Máscara Telefone
+  document.getElementById('field-phone').addEventListener('input', function () {
+    let v = this.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length >= 7) {
+      v = v.replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3');
+    } else if (v.length >= 3) {
+      v = v.replace(/(\d{2})(\d+)/, '($1) $2');
+    }
+    this.value = v;
+  });
+
+  // Máscara CEP
+  document.getElementById('field-zip_code').addEventListener('input', function () {
+    let v = this.value.replace(/\D/g, '').slice(0, 8);
+    v = v.replace(/(\d{5})(\d)/, '$1-$2');
+    this.value = v;
+  });
+
+  // Envio do formulário
+  document.getElementById('register-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearFormErrors();
+
+    const formData = {
+      name: document.getElementById('field-name').value,
+      username: document.getElementById('field-username').value,
+      cpf: document.getElementById('field-cpf').value,
+      phone: document.getElementById('field-phone').value,
+      email: document.getElementById('field-email').value,
+      address: document.getElementById('field-address').value,
+      number: document.getElementById('field-number').value,
+      complement: document.getElementById('field-complement').value,
+      neighborhood: document.getElementById('field-neighborhood').value,
+      city: document.getElementById('field-city').value,
+      state: document.getElementById('field-state').value,
+      zip_code: document.getElementById('field-zip_code').value,
+      gender: document.getElementById('field-gender').value,
+      social_name: document.getElementById('field-social_name').value,
+      birth_date: document.getElementById('field-birth_date').value,
+      password: document.getElementById('field-password').value,
+      confirmPassword: document.getElementById('field-confirmPassword').value,
+    };
+
+    log('[CADASTRO] Dados submetidos', 'debug', formData);
+
+    const result = createUser(formData);
+
+    if (!result.success) {
+      displayFormErrors(result.errors);
+      showToast('Corrija os erros no formulário.', 'error');
+      return;
+    }
+
+    showToast('Conta criada com sucesso! Redirecionando...', 'success');
+    log('[CADASTRO] Usuário criado: ' + result.user.username, 'info');
+
+    // Faz login automático após cadastro
+    const loginResult = login(formData.username, formData.password);
+    if (loginResult.success) {
+      setTimeout(() => window.location.href = 'dashboard.html', 1000);
+    } else {
+      setTimeout(() => window.location.href = 'index.html', 1200);
+    }
+  });
+</script>
+</body>
+</html>

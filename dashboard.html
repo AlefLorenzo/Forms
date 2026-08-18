@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Cadastro — Sistema de Testes</title>
+  <meta name="description" content="Área do usuário — visualize e edite seus dados cadastrados.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+
+<div id="toast-container"></div>
+<div id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-box__icon">⚠️</div>
+    <h3>Confirmar ação</h3>
+    <p id="modal-message"></p>
+    <div class="modal-box__actions">
+      <button class="btn btn--secondary" id="modal-cancel">Cancelar</button>
+      <button class="btn btn--danger" id="modal-confirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+<div id="loading-overlay">
+  <div class="loading__spinner"></div>
+  <p class="loading__text">Carregando...</p>
+</div>
+
+<div class="dashboard-page">
+
+  <!-- Header -->
+  <header class="dashboard-header">
+    <nav class="dashboard-nav">
+      <div class="dashboard-nav__brand">
+        <div class="dashboard-nav__logo">🧪</div>
+        SistemaTest
+      </div>
+    </nav>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <div id="header-user" style="font-size:0.875rem; color:var(--color-text-secondary);"></div>
+      <button class="btn btn--secondary btn--sm" id="btn-logout">Sair</button>
+    </div>
+  </header>
+
+  <!-- Conteúdo -->
+  <main class="dashboard-content">
+
+    <!-- Boas-vindas -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-header__title" id="welcome-title">Meu Cadastro</h1>
+        <p class="page-header__subtitle">Visualize e edite suas informações.</p>
+      </div>
+      <button class="btn btn--primary" id="btn-edit-toggle">✏️ Editar dados</button>
+    </div>
+
+    <!-- Modo Visualização -->
+    <div id="view-mode">
+
+      <!-- Info de status -->
+      <div class="info-box info-box--info" style="margin-bottom: 1.5rem; font-size:0.82rem;">
+        <span>ℹ</span>
+        <div>
+          Você está logado como <strong>usuário comum</strong>. O acesso ao painel administrativo está restrito.
+          <a href="admin.html" style="margin-left:4px;">[Tentar acessar /admin →]</a>
+        </div>
+      </div>
+
+      <!-- Card: Dados pessoais -->
+      <div class="card mb-6">
+        <div class="card__header">
+          <h2 class="card__title">👤 Dados Pessoais</h2>
+          <span id="status-badge"></span>
+        </div>
+        <div class="card__body">
+          <div class="detail-grid" id="personal-data"></div>
+        </div>
+      </div>
+
+      <!-- Card: Endereço -->
+      <div class="card mb-6">
+        <div class="card__header">
+          <h2 class="card__title">📍 Endereço</h2>
+        </div>
+        <div class="card__body">
+          <div class="detail-grid" id="address-data"></div>
+        </div>
+      </div>
+
+      <!-- Card: Conta -->
+      <div class="card mb-6">
+        <div class="card__header">
+          <h2 class="card__title">🔑 Conta</h2>
+        </div>
+        <div class="card__body">
+          <div class="detail-grid" id="account-data"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Modo Edição -->
+    <div id="edit-mode" class="hidden">
+      <div class="card">
+        <div class="card__header">
+          <h2 class="card__title">✏️ Editar Informações</h2>
+          <button class="btn btn--secondary btn--sm" id="btn-cancel-edit">✕ Cancelar</button>
+        </div>
+        <div class="card__body">
+          <form id="edit-form" novalidate>
+
+            <div class="form-section">
+              <p class="form-section-title">Dados Pessoais</p>
+              <div class="form-grid form-grid--2">
+                <div class="form-group form-grid--col-span-2">
+                  <label class="form-label" for="e-name">Nome completo <span class="required">*</span></label>
+                  <input class="form-control" type="text" id="e-name">
+                  <span class="field-error" id="error-name"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="e-username">Nome de usuário <span class="required">*</span></label>
+                  <input class="form-control" type="text" id="e-username" spellcheck="false">
+                  <span class="field-error" id="error-username"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="e-phone">Telefone</label>
+                  <input class="form-control" type="tel" id="e-phone">
+                  <span class="field-error" id="error-phone"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="e-email">E-mail <span class="required">*</span></label>
+                  <input class="form-control" type="email" id="e-email">
+                  <span class="field-error" id="error-email"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="e-social_name">Nome social <span class="optional">(opcional)</span></label>
+                  <input class="form-control" type="text" id="e-social_name">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <p class="form-section-title">Alterar Senha (opcional)</p>
+              <div class="info-box info-box--warning" style="margin-bottom:1rem; font-size:0.78rem;">
+                <span>⚠</span>
+                <span>Preencha somente se quiser alterar a senha. Deixe em branco para manter a atual.</span>
+              </div>
+              <div class="form-grid form-grid--2">
+                <div class="form-group">
+                  <label class="form-label" for="e-current-password">Senha atual</label>
+                  <input class="form-control" type="password" id="e-current-password" autocomplete="current-password">
+                  <span class="field-error" id="error-currentPassword"></span>
+                </div>
+                <div class="form-group"></div>
+                <div class="form-group">
+                  <label class="form-label" for="e-new-password">Nova senha (mín. 6)</label>
+                  <input class="form-control" type="password" id="e-new-password" autocomplete="new-password">
+                  <span class="field-error" id="error-newPassword"></span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="e-confirm-password">Confirmar nova senha</label>
+                  <input class="form-control" type="password" id="e-confirm-password" autocomplete="new-password">
+                  <span class="field-error" id="error-confirmNewPassword"></span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:0.75rem; justify-content:flex-end;">
+              <button type="button" class="btn btn--secondary" id="btn-cancel-edit2">Cancelar</button>
+              <button type="submit" class="btn btn--primary">💾 Salvar alterações</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/validations.js"></script>
+<script src="js/users.js"></script>
+<script src="js/seed.js"></script>
+<script>
+
+  runSeed();
+
+  // [RF06] Protege rota
+  if (!requireAuth()) { /* redirect handled */ }
+
+  const session = getSession();
+  const userId = session.id;
+
+  // Preenche header
+  document.getElementById('header-user').textContent = `Olá, ${session.name.split(' ')[0]}`;
+  document.getElementById('welcome-title').textContent = `Olá, ${session.name.split(' ')[0]}!`;
+
+  // Helper para criar campo de detalhe
+  function detailField(label, value, mono = false) {
+    const empty = !value || value === '';
+    return `
+      <div class="detail-field">
+        <span class="detail-field__label">${label}</span>
+        <span class="detail-field__value ${mono ? 'mono' : ''} ${empty ? 'empty' : ''}">${empty ? 'Não informado' : escapeHtml(String(value))}</span>
+      </div>
+    `;
+  }
+
+  function renderView() {
+    const user = getUserById(userId);
+    if (!user) { showToast('Usuário não encontrado.', 'error'); return; }
+
+    // Badge de status
+    const statusBadge = document.getElementById('status-badge');
+    statusBadge.innerHTML = `<span class="badge badge--${user.status === 'active' ? 'success' : 'error'}">${user.status === 'active' ? 'Ativo' : 'Inativo'}</span>`;
+
+    const genderMap = { M: 'Masculino', F: 'Feminino', O: 'Outro', N: 'Prefiro não informar' };
+
+    document.getElementById('personal-data').innerHTML = [
+      detailField('Nome Completo', user.name),
+      detailField('Nome de Usuário', user.username, true),
+      detailField('CPF', formatCPF(user.cpf), true),
+      detailField('Telefone', formatPhone(user.phone), true),
+      detailField('E-mail', user.email),
+      detailField('Sexo', genderMap[user.gender] || user.gender),
+      detailField('Nome Social', user.social_name),
+      detailField('Data de Nascimento', user.birth_date ? formatDate(user.birth_date + 'T00:00:00') : ''),
+    ].join('');
+
+    document.getElementById('address-data').innerHTML = [
+      detailField('Logradouro', user.address),
+      detailField('Número', user.number),
+      detailField('Complemento', user.complement),
+      detailField('Bairro', user.neighborhood),
+      detailField('Cidade', user.city),
+      detailField('Estado', user.state),
+      detailField('CEP', user.zip_code),
+    ].join('');
+
+    document.getElementById('account-data').innerHTML = [
+      detailField('Perfil', user.role === 'ADMIN' ? 'Administrador' : 'Usuário'),
+      detailField('Cadastrado em', formatDateTime(user.created_at)),
+      detailField('Atualizado em', formatDateTime(user.updated_at)),
+    ].join('');
+  }
+
+  function showEditMode() {
+    const user = getUserById(userId);
+    document.getElementById('e-name').value = user.name || '';
+    document.getElementById('e-username').value = user.username || '';
+    document.getElementById('e-phone').value = formatPhone(user.phone) || '';
+    document.getElementById('e-email').value = user.email || '';
+    document.getElementById('e-social_name').value = user.social_name || '';
+    document.getElementById('view-mode').classList.add('hidden');
+    document.getElementById('edit-mode').classList.remove('hidden');
+  }
+
+  function showViewMode() {
+    document.getElementById('view-mode').classList.remove('hidden');
+    document.getElementById('edit-mode').classList.add('hidden');
+    clearFormErrors();
+    renderView();
+  }
+
+  renderView();
+
+  // Botões
+  document.getElementById('btn-edit-toggle').addEventListener('click', showEditMode);
+  document.getElementById('btn-cancel-edit').addEventListener('click', showViewMode);
+  document.getElementById('btn-cancel-edit2').addEventListener('click', showViewMode);
+
+  document.getElementById('btn-logout').addEventListener('click', function () {
+    showConfirmModal('Tem certeza que deseja sair?', () => {
+      endSession();
+      window.location.href = 'index.html';
+    });
+  });
+
+  // Salvar edição
+  document.getElementById('edit-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearFormErrors();
+
+    const user = getUserById(userId);
+    const formData = {
+      name: document.getElementById('e-name').value,
+      username: document.getElementById('e-username').value,
+      cpf: user.cpf,
+      phone: document.getElementById('e-phone').value,
+      email: document.getElementById('e-email').value,
+      address: user.address,
+      number: user.number,
+      complement: user.complement,
+      neighborhood: user.neighborhood,
+      city: user.city,
+      state: user.state,
+      zip_code: user.zip_code,
+      gender: user.gender,
+      social_name: document.getElementById('e-social_name').value,
+      birth_date: user.birth_date,
+    };
+
+    // Troca de senha
+    const currentPw = document.getElementById('e-current-password').value;
+    const newPw = document.getElementById('e-new-password').value;
+    const confirmPw = document.getElementById('e-confirm-password').value;
+
+    if (newPw || currentPw) {
+      const pwResult = changePassword(userId, currentPw, newPw, confirmPw);
+      if (!pwResult.success) {
+        displayFormErrors(pwResult.errors);
+        showToast('Erro ao alterar senha.', 'error');
+        return;
+      }
+      showToast('Senha alterada com sucesso!', 'success');
+    }
+
+    const result = updateUser(userId, formData);
+    if (!result.success) {
+      displayFormErrors(result.errors);
+      showToast('Corrija os erros.', 'error');
+      return;
+    }
+
+    showToast('Dados atualizados com sucesso!', 'success');
+    showViewMode();
+  });
+</script>
+</body>
+</html>

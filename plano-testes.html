@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plano de Testes — Sistema de Testes</title>
+  <meta name="description" content="Plano de testes completo com casos de teste organizados por categoria.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="doc-page">
+
+  <div class="doc-header">
+    <h1>📋 Plano de Testes</h1>
+    <p>Sistema de Cadastro de Usuários — Ambiente de Testes de Software</p>
+  </div>
+
+  <div class="doc-content">
+
+    <!-- Navegação rápida -->
+    <div class="card mb-6" style="padding: 1.5rem;">
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+        <a href="index.html" class="btn btn--secondary btn--sm">← Login</a>
+        <a href="admin.html" class="btn btn--secondary btn--sm">Painel Admin</a>
+
+      </div>
+    </div>
+
+    <!-- Legenda -->
+    <div class="card mb-6">
+      <div class="card__header"><h2 class="card__title">Legenda</h2></div>
+      <div class="card__body" style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <span class="badge badge--success">Deve passar</span>
+        <span class="badge badge--error">Deve rejeitar</span>
+        <span class="badge badge--warning">Falha intencional</span>
+        <span class="badge badge--info">Verificar comportamento</span>
+      </div>
+    </div>
+
+    <!-- ── CT01-CT04: Cadastro ── -->
+    <div class="doc-section">
+      <h2 class="doc-section-title">🧾 Cadastro (CT01–CT15)</h2>
+      <div class="test-table-wrap">
+        <table class="test-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Categoria</th><th>Cenário</th><th>Entrada</th>
+              <th>Resultado Esperado</th><th>Falha RF</th><th>Resultado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="test-id">CT01</td><td>Cadastro</td>
+              <td>Cadastro completo e válido</td>
+              <td>Todos os campos preenchidos corretamente</td>
+              <td><span class="badge badge--success">Usuário criado</span></td>
+              <td>—</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT02</td><td>Cadastro</td>
+              <td>CPF enviado vazio</td>
+              <td>CPF = "" (vazio)</td>
+              <td><span class="badge badge--warning">Aceito (F01)</span></td>
+              <td>RF01/F01</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT03</td><td>Cadastro</td>
+              <td>Nome social enviado vazio</td>
+              <td>Nome social = "" (vazio)</td>
+              <td><span class="badge badge--warning">Aceito (F02)</span></td>
+              <td>RF01/F02</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT04</td><td>Cadastro</td>
+              <td>Endereço incompleto (sem bairro/complemento)</td>
+              <td>Complemento="" Bairro=""</td>
+              <td><span class="badge badge--warning">Aceito (F03)</span></td>
+              <td>RF01/F03</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT05</td><td>Cadastro</td>
+              <td>Senha com 5 caracteres</td>
+              <td>senha = "12345"</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>—</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT06</td><td>Cadastro</td>
+              <td>Senha com exatamente 6 caracteres</td>
+              <td>senha = "123456"</td>
+              <td><span class="badge badge--success">Aceito</span></td>
+              <td>—</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT07</td><td>Cadastro</td>
+              <td>Senha com mais de 6 caracteres</td>
+              <td>senha = "minhasenha"</td>
+              <td><span class="badge badge--success">Aceito</span></td>
+              <td>—</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT08</td><td>Cadastro</td>
+              <td>Senha vazia</td>
+              <td>senha = ""</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>—</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT09</td><td>Cadastro</td>
+              <td>Senhas diferentes</td>
+              <td>senha ≠ confirmação</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>—</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT10</td><td>Cadastro</td>
+              <td>Nome de usuário duplicado</td>
+              <td>username já existente</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>—</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT11</td><td>Cadastro</td>
+              <td>E-mail duplicado</td>
+              <td>email já cadastrado</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>—</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT12</td><td>Cadastro</td>
+              <td>Nome muito curto</td>
+              <td>nome = "Jo"</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>—</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT13</td><td>Cadastro</td>
+              <td>Nome muito longo</td>
+              <td>nome = 101+ caracteres</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>—</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT14</td><td>Cadastro</td>
+              <td>CEP inválido</td>
+              <td>cep = "1234" (4 dígitos)</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>—</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT15</td><td>Cadastro</td>
+              <td>Data de nascimento no futuro</td>
+              <td>birth_date = "2099-01-01"</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>—</td><td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── CT16-CT25: Login ── -->
+    <div class="doc-section">
+      <h2 class="doc-section-title">🔐 Login (CT16–CT25)</h2>
+      <div class="test-table-wrap">
+        <table class="test-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Categoria</th><th>Cenário</th><th>Entrada</th>
+              <th>Resultado Esperado</th><th>RF</th><th>Resultado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="test-id">CT16</td><td>Login</td>
+              <td>Usuário e senha corretos</td>
+              <td>joao123 / 123456</td>
+              <td><span class="badge badge--success">Login realizado</span></td>
+              <td>RF02</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT17</td><td>Login</td>
+              <td>Senha incorreta</td>
+              <td>joao123 / senhaerrada</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>RF02</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT18</td><td>Login</td>
+              <td>Usuário inexistente</td>
+              <td>usuario_que_nao_existe / 123</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>RF02</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT19</td><td>Login</td>
+              <td>Senha vazia</td>
+              <td>joao123 / ""</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>RF02</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT20</td><td>Login</td>
+              <td>Usuário vazio</td>
+              <td>"" / 123456</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>RF02</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT21</td><td>Login</td>
+              <td>Espaços antes/depois do usuário</td>
+              <td>" joao123 " / 123456</td>
+              <td><span class="badge badge--info">Verificar (trim aplicado)</span></td>
+              <td>RF02</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT22</td><td>Login</td>
+              <td>Caracteres especiais no usuário</td>
+              <td>"joao@#$!" / qualquer</td>
+              <td><span class="badge badge--error">Não encontrado</span></td>
+              <td>RF02</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT23</td><td>Login</td>
+              <td>Case sensitivity (letras maiúsculas)</td>
+              <td>"JOAO123" / 123456</td>
+              <td><span class="badge badge--error">Não encontrado</span></td>
+              <td>RF02</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT24</td><td>Login</td>
+              <td>Usuário inativo</td>
+              <td>pedro99 / pass1234</td>
+              <td><span class="badge badge--error">Inativo — bloqueado</span></td>
+              <td>RF02</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT25</td><td>Login</td>
+              <td>Múltiplas tentativas incorretas</td>
+              <td>5× senha errada</td>
+              <td><span class="badge badge--info">Sem bloqueio (sem rate limit)</span></td>
+              <td>RF02</td><td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── CT26-CT34: ADM / CRUD ── -->
+    <div class="doc-section">
+      <h2 class="doc-section-title">🛡️ Administração e CRUD (CT26–CT38)</h2>
+      <div class="test-table-wrap">
+        <table class="test-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Categoria</th><th>Cenário</th><th>Entrada</th>
+              <th>Resultado Esperado</th><th>RF</th><th>Resultado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="test-id">CT26</td><td>ADM</td>
+              <td>Visualizar lista de usuários</td>
+              <td>Admin logado em /admin</td>
+              <td><span class="badge badge--success">Lista exibida (após 5s)</span></td>
+              <td>RF03</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT27</td><td>ADM</td>
+              <td>Pesquisar usuário</td>
+              <td>Digitar nome na busca</td>
+              <td><span class="badge badge--warning">Erro proposital (F04)</span></td>
+              <td>RF03/F04</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT28</td><td>CRUD</td>
+              <td>Criar usuário (Create)</td>
+              <td>Admin cria novo usuário</td>
+              <td><span class="badge badge--success">Usuário criado</span></td>
+              <td>RF04</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT29</td><td>CRUD</td>
+              <td>Visualizar usuário (Read)</td>
+              <td>Admin abre detalhes</td>
+              <td><span class="badge badge--success">Dados exibidos (após 5s)</span></td>
+              <td>RF03</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT30</td><td>CRUD</td>
+              <td>Editar usuário (Update)</td>
+              <td>Admin altera dados</td>
+              <td><span class="badge badge--success">Dados atualizados</span></td>
+              <td>RF04</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT31</td><td>CRUD</td>
+              <td>Excluir usuário (Delete)</td>
+              <td>Admin confirma exclusão</td>
+              <td><span class="badge badge--success">Usuário removido</span></td>
+              <td>RF05</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT32</td><td>CRUD</td>
+              <td>Editar campos vazios (RF04)</td>
+              <td>Campos obrigatórios em branco</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>RF04</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT33</td><td>CRUD</td>
+              <td>Excluir ID inexistente</td>
+              <td>ID inválido na URL</td>
+              <td><span class="badge badge--error">Erro — não encontrado</span></td>
+              <td>RF05</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT34</td><td>CRUD</td>
+              <td>Excluir admin padrão</td>
+              <td>Excluir usuário "admin"</td>
+              <td><span class="badge badge--error">Bloqueado (proteção)</span></td>
+              <td>RF05</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT35</td><td>CRUD</td>
+              <td>ID vazio na URL de edição</td>
+              <td>/admin-editar.html sem id</td>
+              <td><span class="badge badge--info">Modo criação ativado</span></td>
+              <td>RF04</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT36</td><td>CRUD</td>
+              <td>Usuário duplicado na edição</td>
+              <td>Username = já existente</td>
+              <td><span class="badge badge--error">Rejeitado</span></td>
+              <td>RF04</td><td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── CT37-CT40: Autorização / Desempenho ── -->
+    <div class="doc-section">
+      <h2 class="doc-section-title">🔒 Autorização e Desempenho (CT37–CT42)</h2>
+      <div class="test-table-wrap">
+        <table class="test-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Categoria</th><th>Cenário</th><th>Procedimento</th>
+              <th>Resultado Esperado</th><th>RF/RNF</th><th>Resultado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="test-id">CT37</td><td>Autorização</td>
+              <td>Usuário acessa /admin diretamente</td>
+              <td>Login como joao123, navegar para admin.html</td>
+              <td><span class="badge badge--error">Acesso negado — redirect</span></td>
+              <td>RF06</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT38</td><td>Autorização</td>
+              <td>Acesso sem login</td>
+              <td>Abrir dashboard.html sem sessão</td>
+              <td><span class="badge badge--error">Redirect para login</span></td>
+              <td>RF06</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT39</td><td>Desempenho</td>
+              <td>Abrir lista administrativa</td>
+              <td>Admin → lista de usuários</td>
+              <td><span class="badge badge--warning">~5 segundos (F05)</span></td>
+              <td>RNF/F05</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT40</td><td>Desempenho</td>
+              <td>Abrir detalhes de usuário</td>
+              <td>Admin → detalhes</td>
+              <td><span class="badge badge--warning">~5 segundos (F05)</span></td>
+              <td>RNF/F05</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT41</td><td>Responsividade</td>
+              <td>Visualizar em celular</td>
+              <td>Tela 375px de largura</td>
+              <td><span class="badge badge--success">Layout adaptado</span></td>
+              <td>RNF</td><td></td>
+            </tr>
+            <tr>
+              <td class="test-id">CT42</td><td>Segurança</td>
+              <td>Senha não exibida no DOM</td>
+              <td>Inspecionar campo de senha</td>
+              <td><span class="badge badge--success">type=password</span></td>
+              <td>RNF</td><td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="info-box info-box--info" style="margin-top: 2rem;">
+      <span>ℹ</span>
+      <div>
+        <strong>Como usar esta tabela:</strong> Execute cada caso de teste manualmente na aplicação.
+        Registre o resultado obtido na coluna "Resultado" e compare com o esperado.
+        Caso encontre falhas inesperadas, registre-as para análise.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/seed.js"></script>
+<script>
+  runSeed();
+  // Plano de testes é público — não requer auth
+</script>
+</body>
+</html>
