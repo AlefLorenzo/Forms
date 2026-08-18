@@ -3,7 +3,7 @@ Versão: 2.0.
 Abaixo está em Markdown puro: coloque nesse site -> https://markdownlivepreview.com/
 
 
-
+Baixa e preencher.
 [Documento_Execucao_Testes(1) (1).docx](https://github.com/user-attachments/files/31189241/Documento_Execucao_Testes.1.1.docx)
 
 # Documento de Execução e Registro de Testes
